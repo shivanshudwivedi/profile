@@ -8,7 +8,7 @@ const revealObserver = new IntersectionObserver((entries) => {
   });
 }, { threshold: 0.14, rootMargin: '0px 0px -6% 0px' });
 
-document.querySelectorAll('.reveal, .metric, .timeline').forEach((el) => revealObserver.observe(el));
+document.querySelectorAll('.reveal, .metric').forEach((el) => revealObserver.observe(el));
 
 const counterObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
@@ -31,26 +31,6 @@ const counterObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.65 });
 
 document.querySelectorAll('[data-count]').forEach((el) => counterObserver.observe(el));
-
-const lattice = document.querySelector('.lattice-art');
-if (lattice) {
-  for (let i = 0; i < 14; i += 1) {
-    const node = document.createElement('i');
-    node.style.cssText = `position:absolute;left:${12 + Math.random() * 76}%;top:${10 + Math.random() * 80}%;width:8px;height:8px;border-radius:50%;background:${i % 3 ? '#d8ff55' : '#ff6b35'};box-shadow:0 0 18px currentColor;animation:blink ${1.5 + Math.random() * 2}s ${Math.random()}s infinite;`;
-    lattice.appendChild(node);
-  }
-}
-
-const particleArt = document.querySelector('.particle-art');
-if (particleArt) {
-  for (let i = 0; i < 34; i += 1) {
-    const particle = document.createElement('i');
-    particle.style.setProperty('--a', `${i * (360 / 34) + Math.random() * 9}deg`);
-    particle.style.setProperty('--d', `${100 + Math.random() * 180}px`);
-    particle.style.animationDelay = `${Math.random() * 2.5}s`;
-    particleArt.appendChild(particle);
-  }
-}
 
 if (!reducedMotion && window.matchMedia('(pointer: fine)').matches) {
   const glow = document.querySelector('.cursor-glow');
@@ -81,10 +61,34 @@ if (!reducedMotion && window.matchMedia('(pointer: fine)').matches) {
 
 let lastScroll = 0;
 const header = document.querySelector('.site-header');
-window.addEventListener('scroll', () => {
-  const current = window.scrollY;
-  header.style.transform = current > lastScroll && current > 180 ? 'translateY(-100%)' : '';
-  lastScroll = current;
-}, { passive: true });
+const navLinks = Array.from(document.querySelectorAll('.site-header nav a'));
+const navTargets = navLinks
+  .map((a) => ({ a, el: document.querySelector(a.getAttribute('href')) }))
+  .filter((t) => t.el);
+let currentNav = '';
+
+const onScroll = () => {
+  const y = window.scrollY;
+
+  header.style.transform = y > lastScroll && y > 220 ? 'translateY(-100%)' : '';
+  header.classList.toggle('is-condensed', y > 40);
+  lastScroll = y;
+
+  // mark the section the reader is actually in
+  let active = '';
+  const line = y + window.innerHeight * 0.36;
+  navTargets.forEach(({ a, el }) => {
+    if (el.offsetTop <= line) active = a.getAttribute('href');
+  });
+  if (active !== currentNav) {
+    currentNav = active;
+    navLinks.forEach((a) => {
+      if (a.getAttribute('href') === active) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    });
+  }
+};
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
 
 document.getElementById('year').textContent = new Date().getFullYear();
