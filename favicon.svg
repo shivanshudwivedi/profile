@@ -1,6 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="10" fill="#11110f"/>
-  <text x="32" y="43" text-anchor="middle" font-family="Helvetica,Arial,sans-serif"
-        font-size="30" font-weight="700" letter-spacing="-1.5" fill="#f1f0e8">SD</text>
-  <circle cx="52" cy="13" r="5" fill="#2f56ff"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#091013"/><text x="32" y="42" fill="#f3f4ef" font-family="Helvetica,Arial,sans-serif" font-size="30" letter-spacing="-2" text-anchor="middle">SD.</text></svg>
